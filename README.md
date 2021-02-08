@@ -1,3 +1,5 @@
+> 用于总结一下 k8s 安装过程（非生产）
+
 # 1. 访问K8S dashboard
 kubectl proxy --address='0.0.0.0'  --accept-hosts='^*$' --port=8001
 
