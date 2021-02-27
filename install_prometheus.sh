@@ -3,7 +3,7 @@
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --namespace monitoring
 helm repo update
-helm install prometheus prometheus-community/kube-prometheus-stack --namespace mointoring
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace mointoring --version 12.7.0
 
 
 # 访问：
