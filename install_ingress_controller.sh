@@ -1,4 +1,7 @@
-##################方式一##################
+##############方式一(推荐)###############
+# 参考：https://kind.sigs.k8s.io/docs/user/ingress/
+
+##################方式二##################
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
 helm fetch ingress-nginx/ingress-nginx --version 3.19.0
@@ -25,7 +28,7 @@ helm install ingress-nginx -f values.yaml  --namespace=ingress-nginx .
 curl http://{NODE_IP}:{NodePort}/bar
 
 
-##################方式二#################
+##################方式三#################
 
 # 参考以下链接
 # https://raw.githubusercontent.com/kubernetes/ingress-nginx/helm-chart-3.20.0/deploy/static/provider/kind/deploy.yaml
