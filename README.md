@@ -1,5 +1,11 @@
 > 用于总结一下 k8s 安装过程（非生产）
 
+# 0. 创建集群
+
+```bash
+sh start_cluster.sh
+```
+
 # 1. 访问K8S dashboard
 kubectl proxy --address='0.0.0.0'  --accept-hosts='^*$' --port=8001
 
@@ -31,3 +37,9 @@ ssh -fgCNL 33000:127.0.0.1:3000 root@192.168.1.104
 ```
 > 页面地址：http://localhost:33000
 > 用户名和密码：kubectl get secret -n monitoring grafana-credentials -o yaml
+
+# 4. 访问 kibana
+
+```bash
+kubectl port-forward -n monitoring svc/kibana-kibana 8701:5601 --address 0.0.0.0
+```
