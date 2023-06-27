@@ -1,18 +1,20 @@
+手动搭建 k8s1.25 + containerd
+
 # 0. 基础环境
 
-| 主机名 | IP地址 | 角色 | os | kernel |
-| --- | --- | --- | --- | --- |
+| 主机名  | IP 地址      | 角色   | os        | kernel          |
+| ------- | ------------ | ------ | --------- | --------------- |
 | master1 | 10.81.82.100 | master | centos7u6 | 5.10.0-1.0.0.25 |
 | master2 | 10.81.82.101 | master | centos7u6 | 5.10.0-1.0.0.25 |
 | master3 | 10.81.82.102 | master | centos7u6 | 5.10.0-1.0.0.25 |
-| node1 | 10.81.82.103 | node | centos7u6 | 5.10.0-1.0.0.25 |
-| node2 | 10.81.82.104 | node | centos7u6 | 5.10.0-1.0.0.25 |
+| node1   | 10.81.82.103 | node   | centos7u6 | 5.10.0-1.0.0.25 |
+| node2   | 10.81.82.104 | node   | centos7u6 | 5.10.0-1.0.0.25 |
 
-| 软件 | 版本 |
-| --- | --- |
-| docker-ce | 24.0.0 |
-| pod 网络 | 10.244.0.0/16 |
-| service 网络 | 10.1.0.0/16 |
+| 软件         | 版本          |
+| ------------ | ------------- |
+| docker-ce    | 24.0.0        |
+| pod 网络     | 10.244.0.0/16 |
+| service 网络 | 10.1.0.0/16   |
 
 # 1. 参数配置
 
@@ -58,7 +60,7 @@ yum install wget jq psmisc vim net-tools telnet yum-utils device-mapper-persiste
 ## 1.4 关闭防火墙、selinux、swap、dnsmasq
 
 ```bash
-systemctl disable --now firewalld 
+systemctl disable --now firewalld
 systemctl disable --now dnsmasq
 systemctl disable --now NetworkManager
 
@@ -117,7 +119,7 @@ modprobe -- ip_vs_rr
 modprobe -- ip_vs_wrr
 modprobe -- ip_vs_sh
 modprobe -- nf_conntrack
-vim /etc/modules-load.d/ipvs.conf 
+vim /etc/modules-load.d/ipvs.conf
 # 加入以下内容
 ip_vs
 ip_vs_lc
@@ -209,7 +211,7 @@ net.bridge.bridge-nf-call-ip6tables = 1
 EOF
 
 # 加载内核模块
-sysctl --system 
+sysctl --system
 
 # containerd 配置文件
 mkdir -p /etc/containerd
@@ -227,7 +229,7 @@ timeout: 10
 debug: false
 EOF
 
-# 配置 kubelet 使用 containered 
+# 配置 kubelet 使用 containered
 cat >/etc/sysconfig/kubelet<<EOF
 KUBELET_KUBEADM_ARGS="--container-runtime=remote --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock"
 EOF
@@ -245,13 +247,13 @@ systemctl daemon-reload && systemctl enable --now kubelet
 # 修改文件内容为 admin.yaml
 apiVersion: kubeadm.k8s.io/v1beta3
 bootstrapTokens:
-- groups:
-  - system:bootstrappers:kubeadm:default-node-token
-  token: abcdef.0123456789abcdef
-  ttl: 24h0m0s
-  usages:
-  - signing
-  - authentication
+  - groups:
+      - system:bootstrappers:kubeadm:default-node-token
+    token: abcdef.0123456789abcdef
+    ttl: 24h0m0s
+    usages:
+      - signing
+      - authentication
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: 10.81.83.145
