@@ -189,7 +189,8 @@ sysctl --system
 ## 2.1 安装 k8s 工具
 
 ```bash
-yum list --showduplicate kubletyum install -y kubelet-1.25.0-0.x86_64 kubectl-1.25.0-0.x86_64 kubeadm-1.25.0-0.x86_64yum install docker-ce-24.0.0 docker-ce-cli-24.0.0 containerd.io
+# yum list --showduplicate kublet
+yum install -y kubelet-1.25.0-0.x86_64 kubectl-1.25.0-0.x86_64 kubeadm-1.25.0-0.x86_64yum install docker-ce-24.0.0 docker-ce-cli-24.0.0 containerd.io
 ```
 
 ## 2.2 配置 containerd
