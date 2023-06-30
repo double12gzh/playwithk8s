@@ -13,8 +13,8 @@
 | 软件         | 版本          |
 | ------------ | ------------- |
 | docker-ce    | 24.0.0        |
-| pod 网络     | 10.244.0.0/16 |
-| service 网络 | 10.1.0.0/16   |
+| pod 网络     | 193.244.0.0/16 |
+| service 网络 | 196.20.0.0/16   |
 
 # 1. 参数配置
 
@@ -246,45 +246,56 @@ systemctl daemon-reload && systemctl enable --now kubelet
 # kubeadm config print init-defaults
 
 # 修改文件内容为 admin.yaml
+# 需要替换一下 "MASTERIP 或 VIP" 
+
 apiVersion: kubeadm.k8s.io/v1beta3
 bootstrapTokens:
-  - groups:
-      - system:bootstrappers:kubeadm:default-node-token
-    token: abcdef.0123456789abcdef
-    ttl: 24h0m0s
-    usages:
-      - signing
-      - authentication
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: abcdef.0123456789abcdef
+  ttl: 24h0m0s
+  usages:
+  - signing
+  - authentication
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: 10.81.83.145
+  advertiseAddress: MASTER_IP 或 VIP
   bindPort: 6443
 nodeRegistration:
   criSocket: unix:///run/containerd/containerd.sock
   imagePullPolicy: IfNotPresent
   name: master1
   taints: null
-
 ---
 apiServer:
+  extraArgs:
+    authorization-mode: Node,RBAC
   timeoutForControlPlane: 4m0s
 apiVersion: kubeadm.k8s.io/v1beta3
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
-controlPlaneEndpoint: 10.81.83.145:6443
+controlPlaneEndpoint: MASTER_IP:6443 或 VIP:6443
 controllerManager: {}
 dns: {}
 etcd:
   local:
     dataDir: /var/lib/etcd
-imageRepository: registry.cn-shanghai.aliyuncs.com/google_containers
+imageRepository: iregistry.fuckyou.com/kubernetes
 kind: ClusterConfiguration
 kubernetesVersion: 1.25.0
 networking:
   dnsDomain: cluster.local
-  podSubnet: 10.244.0.0/16
-  serviceSubnet: 10.1.0.0/16
+  podSubnet: 193.244.0.0/16
+  serviceSubnet: 196.20.0.0/16
 scheduler: {}
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: systemd
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: iptables
 ```
 
 ## 3.2 创建集群
@@ -348,11 +359,19 @@ containers:
 # vimdiff xx.yaml xx.yaml.org 可以对比二者的修改
 
 # https://raw.githubusercontent.com/projectcalico/calico/v3.24.6/manifests/tigera-operator.yaml
+# 如果你能访问外网，那么本文件中的 image: 指定的镜像仓库不需要修改
 kubectl apply -f calico_v3.24.6/calico_3.24.6/tigera-operator_v3.24.6.yaml
 
 # https://raw.githubusercontent.com/projectcalico/calico/v3.24.6/manifests/custom-resources.yaml
+# 1. 如果你能连接外网，可以把这个删除，同时也不需要执行 kubectl apply xxxx/imageset.yaml
+# registry: iregistry.fuckyou.com
+  imagePath: "kubernetes/calico"
+  imagePrefix: ""
+# 2. 根据自己的环境修改 cidr，我在使用 kubeadm 时使用 podSubnet 为 10.244.0.0/16，所以需要修改
 kubectl apply -f calico_v3.24.6/calico_3.24.6/custom-resources_v3.24.6.yaml
 
+# 修改 imageset.yaml
+# https://docs.tigera.io/calico/3.24/operations/image-options/imageset#update-the-operator-deployment-with-a-digest
 kubectl apply -f calico_v3.24.6/calico_3.24.6/imageset.yaml
 ```
 
