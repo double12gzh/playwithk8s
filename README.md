@@ -355,6 +355,7 @@ containers:
 # https://docs.tigera.io/calico/3.24/getting-started/kubernetes/requirements
 # https://docs.tigera.io/calico/3.24/getting-started/kubernetes/quickstart#install-calico
 # https://docs.tigera.io/calico/3.24/operations/image-options/imageset#create-an-imageset
+# 联通性检查：https://github.com/alibaba/kubeskoop：
 
 # vimdiff xx.yaml xx.yaml.org 可以对比二者的修改
 
