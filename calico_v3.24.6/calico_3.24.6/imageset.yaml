@@ -1,0 +1,22 @@
+kind: ImageSet
+apiVersion: operator.tigera.io/v1
+metadata:
+  name: calico-v3.24.5
+spec:
+  images:
+    - image: "calico/cni"
+      digest: "sha256:6d29e8402585431e5044ebddc70f19fe9c8a12d1f3651b12b7cd55407cbdebca"
+    - image: "calico/kube-controllers"
+      digest: "sha256:b28b1820f9bce61688482d812be9bbd1a4b44aafcfa8150d0844a756767b0be1"
+    - image: "calico/node"
+      digest: "sha256:5c614b62b13d6a45826ea3ff72022be6aef7637198f8c1c83c2d2d547206a4a0"
+    - image: "calico/typha"
+      digest: "sha256:e6b76faa0defa99fc1c8dbbc7150d7ccc75bf71fb27e281ffbe703441dfea0d5"
+    - image: "calico/pod2daemon-flexvol"
+      digest: "sha256:f1d6d1c64cb50a1c8e523b6748e99bc9ad6c038bd8f89f3ffc75abb2179c9665"
+    - image: "calico/apiserver"
+      digest: "sha256:2668af8df60a96cbb968a5c34625f595ebd015a074b2e31058551fa6eebb94cf"
+    - image: "calico/csi"
+      digest: "sha256:8f9b77a5cd2a0c77ae7a3797633c0d113486931d529f282db9efce05708f9b97"
+    - image: "calico/node-driver-registrar"
+      digest: "sha256:b68ad4c7bd6e962429f060fe2398acadcc4734c40eca699d51783c84b17edb4e"

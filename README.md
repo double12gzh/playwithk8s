@@ -340,11 +340,20 @@ containers:
 ## 3.4 安装 calico
 
 ```bash
-版本； v3.24
-需要修改 veth_mtu: "1500"
-
 # 本次使用的是 k8s 1.25, 根据 calico 的文档可以看到需要使用 3.24 版本
 # https://docs.tigera.io/calico/3.24/getting-started/kubernetes/requirements
+# https://docs.tigera.io/calico/3.24/getting-started/kubernetes/quickstart#install-calico
+# https://docs.tigera.io/calico/3.24/operations/image-options/imageset#create-an-imageset
+
+# vimdiff xx.yaml xx.yaml.org 可以对比二者的修改
+
+# https://raw.githubusercontent.com/projectcalico/calico/v3.24.6/manifests/tigera-operator.yaml
+kubectl apply -f calico_v3.24.6/calico_3.24.6/tigera-operator_v3.24.6.yaml
+
+# https://raw.githubusercontent.com/projectcalico/calico/v3.24.6/manifests/custom-resources.yaml
+kubectl apply -f calico_v3.24.6/calico_3.24.6/custom-resources_v3.24.6.yaml
+
+kubectl apply -f calico_v3.24.6/calico_3.24.6/imageset.yaml
 ```
 
 # 4. 删除集群

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-debug
+spec:
+  selector:
+    matchLabels:
+      run: my-debug
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: my-debug
+    spec:
+      containers:
+        - name: my-debug
+          image: iregistry.fuckyou.com/kubernetes/kubedebug:latest
+          command:
+            - sleep
+            - "3600"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-debug
+  labels:
+    run: my-debug
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+  selector:
+    run: my-debug
