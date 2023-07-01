@@ -191,6 +191,17 @@ sysctl --system
 ```bash
 # yum list --showduplicate kublet
 yum install -y kubelet-1.25.0-0.x86_64 kubectl-1.25.0-0.x86_64 kubeadm-1.25.0-0.x86_64 docker-ce-24.0.0 docker-ce-cli-24.0.0 containerd.io
+
+# 如果需要下载翻墙下载镜像，可以配置一下 docker 代理
+# vim /usr/lib/systemd/system/docker.service
+# 添加以下内容
+# [Service]
+#...
+#Environment="HTTP_PROXY=http://agent.fuckyou.com:8118"
+#Environment="HTTPS_PROXY=http://agent.fuckyou.com:8118"
+#Environment="NO_PROXY=localhost,127.0.0.1"
+...
+
 ```
 
 ## 2.2 配置 containerd
