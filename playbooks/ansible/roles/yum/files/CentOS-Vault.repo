@@ -1,0 +1,38 @@
+# CentOS Vault contains rpms from older releases in the CentOS-7 
+# tree.
+
+[C7.0.1406-base]
+name=CentOS-7.0.1406 - Base
+baseurl=http://vault.centos.org/7.0.1406/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=0
+
+[C7.0.1406-updates]
+name=CentOS-7.0.1406 - Updates
+baseurl=http://vault.centos.org/7.0.1406/updates/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=0
+
+[C7.0.1406-extras]
+name=CentOS-7.0.1406 - Extras
+baseurl=http://vault.centos.org/7.0.1406/extras/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=0
+
+[C7.0.1406-centosplus]
+name=CentOS-7.0.1406 - CentOSPlus
+baseurl=http://vault.centos.org/7.0.1406/centosplus/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=0
+
+[C7.0.1406-fasttrack]
+name=CentOS-7.0.1406 - CentOSPlus
+baseurl=http://vault.centos.org/7.0.1406/fasttrack/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=0
+

@@ -1,0 +1,14 @@
+---
+- name: Check machine
+  fail:
+    msg: check machine fail, only support x86_64
+  when: ansible_machine != "x86_64"
+
+- name: Get selinux state
+  shell: /usr/sbin/getenforce
+  register: selinux_state
+
+- name: Verify if selinux state is set to 'disabled'
+  fail:
+    msg: failed to check selinux. Please reboot your machine and redo boostrap.
+  when: selinux_state.stdout != "Disabled"

@@ -1,0 +1,6 @@
+[wlnmp]
+name=wlnmp
+baseurl=https://mirrors.wlnmp.com/centos/$releasever/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://mirrors.wlnmp.com/centos/RPM-GPG-KEY-wlnmp

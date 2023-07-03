@@ -1,0 +1,5 @@
+---
+- name: Verify the ansible_default_ipv4.address is not empty
+  fail:
+    msg: default gw(0.0.0.0) is missing, cannot get ansible_default_ipv4.address.
+  when: not ansible_default_ipv4["address"]

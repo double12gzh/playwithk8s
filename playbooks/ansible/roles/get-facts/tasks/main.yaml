@@ -1,0 +1,15 @@
+---
+- name: Get vars from planning
+  include_vars:
+    file: "{{ installer_base_dir }}/planning.json"
+    name: planning_vars
+
+- name: Set facts from planning.json
+  set_fact:
+    ip_list: "{{ planning_vars.clusters.split(',') }}"
+    leading_server: "{{ planning_vars.leading_server }}"
+    password: "{{ planning_vars.password }}"
+
+- name: Set facts for installer
+  set_fact:
+    master_nodes: "{{ ip_list[0:3] }}"

@@ -1,0 +1,26 @@
+---
+- name: Create /root/.ssh
+  file:
+    path: /root/.ssh/
+    state: directory
+
+- name: Remove existing key files
+  file:
+    path: "/root/.ssh/{{ item }}"
+    state: absent
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+
+- name: Generate private and public key
+  shell: echo 'y\n' | ssh-keygen -q -P '' -f /root/.ssh/id_rsa -t rsa -N ''
+
+- name: Set fact for ssh nodes
+  set_fact:
+    cluster_node_list: "{{ ip_list }}"
+
+- name: Debug ip_list
+  debug:
+    msg: "cluster ips: {{ ip_list }}"
+
+- include: sshkey_config.yaml

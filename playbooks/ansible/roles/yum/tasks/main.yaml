@@ -1,0 +1,68 @@
+---
+- name: Remove /etc/yum.repos.d
+  file:
+    path: /etc/yum.repos.d
+    state: absent
+
+- name: Create /etc/yum.repos.d
+  file:
+    path: /etc/yum.repos.d
+    state: directory
+
+- name: Copy repos to /etc/yum.repos.d
+  copy:
+    src: "{{ item }}"
+    dest: /etc/yum.repos.d/
+    mode: 644
+  with_items:
+    - baidu-bcm.repo
+    - CentOS-Base.repo
+    - CentOS-CR.repo
+    - CentOS-Debuginfo.repo
+    - CentOS-fasttrack.repo
+    - CentOS-Sources.repo
+    - CentOS-Vault.repo
+    - docker-ce.repo
+    - epel.repo
+    - kubernates.repo
+    - kubernetes.repo
+    - wlnmp-release-centos.repo
+
+- name: Do yum clean all and yum makecache
+  yum:
+    update_cache: true
+
+- name: Download the RPM package
+  get_url:
+    url: http://mirrors.wlnmp.com/centos/wlnmp-release-centos.noarch.rpm
+    dest: /tmp/wlnmp-release-centos.noarch.rpm
+
+- name: Install the RPM package
+  yum:
+    name: /tmp/wlnmp-release-centos.noarch.rpm
+    state: present
+
+- name: Install packages
+  yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+      - ntpdate
+      - wget
+      - jq
+      - psmisc
+      - net-tools
+      - telnet
+      - ipvsadm
+      - ipset
+      - sysstat
+      - conntrack
+      - libseccomp
+      - kubelet-1.25.0-0.x86_64
+      - kubectl-1.25.0-0.x86_64
+      - kubeadm-1.25.0-0.x86_64
+      - docker-ce-24.0.0
+      - docker-ce-cli-24.0.0
+      - containerd.io
+    state: present

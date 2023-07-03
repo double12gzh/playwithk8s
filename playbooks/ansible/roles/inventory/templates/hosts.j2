@@ -1,0 +1,17 @@
+[bootstrap]
+{{ leading_server }}
+
+[cluster]
+{% for ip in ip_list %}
+{{ ip }}
+{% endfor %}
+
+[master]
+{% for ip in master_nodes %}
+{{ ip }}
+{% endfor %}
+
+[worker]
+{% for ip in ip_list | difference(master_nodes) %}
+{{ ip }}
+{% endfor %}

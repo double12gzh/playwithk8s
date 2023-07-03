@@ -1,0 +1,6 @@
+---
+- name: Copy iptables configurations
+  template: src=iptables.j2 dest=/etc/sysconfig/iptables
+
+- name: Restart iptables service
+  service: name=iptables state=restarted enabled=yes

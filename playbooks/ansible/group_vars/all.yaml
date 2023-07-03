@@ -1,0 +1,3 @@
+---
+installer_base_dir: "tmp"
+pause_image: "myregistry.fuckyou.com/kubernetes/pause:3.8"

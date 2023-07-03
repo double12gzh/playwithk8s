@@ -1,0 +1,17 @@
+---
+- name: Create a timezone symbolic link
+  file:
+    src: /usr/share/zoneinfo/Asia/Shanghai
+    dest: /etc/localtime
+    state: link
+    force: true
+
+- name: Copy timezone to /etc/timezone
+  copy:
+    src: timezone
+    dest: /etc/timezone
+    mode: 644
+
+- name: Update with ntp to ntpsr.baidu.com
+  shell: ntpdate -v ntpsr.baidu.com
+  register: update_result

@@ -1,0 +1,5 @@
+[epel]
+name=epel
+baseurl=http://mirrors.baidubce.com/epel/$releasever/$basearch/
+gpgcheck=0
+enabled=1

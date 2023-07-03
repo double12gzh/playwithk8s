@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  any_errors_fatal: true
+  name: Setup ssh tunnel and prepare cluster hosts config
+  roles:
+    - { role: get-facts, tags: always }
+    - { role: ssh_tunnel, tags: ssh_tunnel }
+    - { role: inventory, tags: inventory }
+
+- hosts: cluster
+  any_errors_fatal: true
+  name: Do preparation
+  roles:
+    - { role: network, tag: network }
+    - { role: yum, tag: yum }
+    - { role: prepare, tags: prepare }
+    - { role: kernel, tag: kernel }

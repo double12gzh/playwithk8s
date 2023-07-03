@@ -1,0 +1,8 @@
+---
+- name: Create /root/.ssh on remote nodes
+  shell: "sshpass -p {{ password }} ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ item }} 'mkdir -p /root/.ssh'"
+  with_items: "{{ cluster_node_list }}"
+
+- name: Setup ssh tunnel
+  shell: "sshpass -p {{ password }} ssh-copy-id -f -o StrictHostKeyChecking=no root@{{ item }}"
+  with_items: "{{ cluster_node_list }}"

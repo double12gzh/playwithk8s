@@ -1,0 +1,198 @@
+---
+- name: Copy k8s.conf to /etc/sysctl.d/k8s.conf
+  copy:
+    src: k8s.conf
+    dest: /etc/sysctl.d/k8s.conf
+    mode: 644
+    force: yes
+
+- name: Copy limits.conf to /etc/security/limits.conf
+  copy:
+    src: limits.conf
+    dest: /etc/security/limits.conf
+    mode: 644
+    force: yes
+
+- name: Copy ipvs.conf to /etc/modules-load.d/ipvs.conf
+  copy:
+    src: ipvs.conf
+    dest: /etc/modules-load.d/ipvs.conf
+    mode: 644
+    force: yes
+
+- name: Reload and restart systemd-modules-load
+  systemd:
+    name: systemd-modules-load
+    state: restarted
+    daemon_reload: true
+
+- name: Copy crictl.yaml to /etc/crictl.yaml
+  copy:
+    src: crictl.yaml
+    dest: /etc/crictl.yaml
+    mode: 644
+    force: yes
+
+- name: Copy 99-kubernetes-cri.conf to /etc/sysctl.d/99-kubernetes-cri.conf
+  copy:
+    src: 99-kubernetes-cri.conf
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+    mode: 644
+    force: yes
+
+- name: Copy kubelet config to /etc/sysconfig/kubelet
+  copy:
+    src: kubelet
+    dest: /etc/sysconfig/kubelet
+    mode: 644
+    force: yes
+
+- name: Reload and restart kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+    daemon_reload: true
+
+- name: Generate containdrd config
+  shell: containerd config default | tee /etc/containerd/config.toml
+
+- name: Prepare containerd config - step 1
+  lineinfile:
+    path: "/etc/containerd/config.toml"
+    regexp: "SystemdCgroup = false"
+    line: "SystemdCgroup = true"
+
+- name: Prepare containerd config - step 2
+  lineinfile:
+    path: "/etc/containerd/config.toml"
+    regexp: "registry.k8s.io/pause:3.6"
+    line: "{{ pause_image }}"
+
+- name: Reload and restart containerd
+  systemd:
+    name: containerd
+    state: restarted
+    daemon_reload: true
+
+- name: Mount directory as shared
+  mount: mount --make-shared "{{ item }}"
+  with_items:
+    - /var
+    - /sys
+
+- name: Set open file soft and hard limit
+  shell: ulimit -SHn 65535
+
+- name: Setup vm.swappiness to 0
+  sysctl:
+    name: vm.swappiness
+    value: "0"
+    state: absent
+
+- name: Disable swapoff
+  command: swapoff -a
+
+- name: Stop selinux(need to reboot machine if selinux is not disabled)
+  selinux:
+    state: disabled
+
+- name: Get selinux state
+  shell: /usr/sbin/getenforce
+  register: selinux_state
+
+- name: Set SELinux execution policy to permissive
+  shell: setenforce 0
+  when: selinux_state.stdout != "Disabled"
+
+- name: Disable SELinux Permanently
+  lineinfile:
+    path: "{{ item }}"
+    regexp: "^SELINUX="
+    line: "SELINUX=disabled"
+  with_items:
+    - /etc/sysconfig/selinux
+    - /etc/selinux/config
+
+- name: Get firewalld status
+  shell: service firewalld status && echo success || echo failed
+  register: firewalld_status
+
+- name: Stop firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: firewalld_status.stdout == "success"
+
+- name: Get dnsmasq status
+  shell: service dnsmasq status && echo success || echo failed
+  register: dnsmasq_status
+
+- name: Stop dnsmasq
+  service:
+    name: dnsmasq
+    state: stopped
+    enabled: no
+  when: dnsmasq_status.stdout == "success"
+
+- name: Get NetworkManager status
+  shell: service NetworkManager status && echo success || echo failed
+  register: networkmanasger_status
+
+- name: Stop NetworkManager
+  service:
+    name: NetworkManager
+    state: stopped
+    enabled: no
+  when: networkmanasger_status.stdout == "success"
+
+- name: Verify if br_netfilter module exists
+  shell: "modinfo br_netfilter"
+  register: modinfo_br_netfilter
+  failed_when: modinfo_br_netfilter.rc != 0
+  changed_when: false
+
+- name: Enable br_netfilter module
+  modprobe:
+    name: br_netfilter
+    state: present
+  when: modinfo_br_netfilter.rc == 0
+
+- name: Check if bridge-nf-call-iptables key exists
+  command: "sysctl net.bridge.bridge-nf-call-iptables"
+  failed_when: false
+  changed_when: false
+  register: sysctl_bridge_nf_call_iptables
+
+- name: Open bridge-nf-call-iptables
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  when: sysctl_bridge_nf_call_iptables.rc == 0
+
+- name: Open ip_forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Load ipvs modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ip_vs
+    - ip_vs_rr
+    - ip_vs_wrr
+    - ip_vs_sh
+    - nf_conntrack
+    - overlay
+    - br_netfilter
+
+- name: Reload all sysctl settings
+  command: sysctl --system

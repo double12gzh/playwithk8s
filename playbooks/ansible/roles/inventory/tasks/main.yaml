@@ -1,0 +1,5 @@
+---
+- name: Generate inventory for installer
+  template:
+    src: hosts.j2
+    dest: "{{ installer_base_dir }}/ansible/hosts"
