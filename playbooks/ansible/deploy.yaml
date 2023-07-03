@@ -1,0 +1,17 @@
+---
+- hosts: cluster
+  any_errors_fatal: true
+  name: Do environment preparation
+  roles:
+    - { role: get-facts, tags: always }
+    - { role: network, tag: network }
+    - { role: yum, tag: yum }
+    - { role: prepare, tags: prepare }
+    - { role: kernel, tag: kernel }
+
+- hosts: localhost
+  any_errors_fatal: true
+  name: Do kubeadm init
+  roles:
+    - { role: get-facts, tags: always }
+    - { role: kubeadm, tag: kubeadm }

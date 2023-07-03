@@ -60,13 +60,13 @@
   lineinfile:
     path: "/etc/containerd/config.toml"
     regexp: "SystemdCgroup = false"
-    line: "SystemdCgroup = true"
+    line: "            SystemdCgroup = true"
 
 - name: Prepare containerd config - step 2
   lineinfile:
     path: "/etc/containerd/config.toml"
     regexp: "registry.k8s.io/pause:3.6"
-    line: "{{ pause_image }}"
+    line: "    sandbox_image = '{{ pause_image }}'"
 
 - name: Reload and restart containerd
   systemd:
@@ -74,11 +74,11 @@
     state: restarted
     daemon_reload: true
 
-- name: Mount directory as shared
-  mount: mount --make-shared "{{ item }}"
-  with_items:
-    - /var
-    - /sys
+#- name: Mount directory as shared
+#  shell: mount --make-shared "{{ item }}"
+#  with_items:
+#    - /var
+#    - /sys
 
 - name: Set open file soft and hard limit
   shell: ulimit -SHn 65535

@@ -15,7 +15,6 @@
     dest: /etc/yum.repos.d/
     mode: 644
   with_items:
-    - baidu-bcm.repo
     - CentOS-Base.repo
     - CentOS-CR.repo
     - CentOS-Debuginfo.repo

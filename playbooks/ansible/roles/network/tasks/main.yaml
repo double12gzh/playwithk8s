@@ -2,5 +2,10 @@
 - name: Copy iptables configurations
   template: src=iptables.j2 dest=/etc/sysconfig/iptables
 
+- name: Check if iptables service exists
+  stat: path=/usr/lib/systemd/system/iptables.service
+  register: iptables_status
+
 - name: Restart iptables service
   service: name=iptables state=restarted enabled=yes
+  when: iptables_status.stat.exists

@@ -12,6 +12,6 @@
     dest: /etc/timezone
     mode: 644
 
-- name: Update with ntp to ntpsr.baidu.com
-  shell: ntpdate -v ntpsr.baidu.com
+- name: Update with ntp to ntp.aliyun.com
+  shell: ntpdate -v ntp.aliyun.com
   register: update_result

@@ -1,0 +1,17 @@
+---
+- name: Prepare kubeadm config - update token
+  template:
+    dest: "/tmp/kubeadm.yaml"
+    src: "kubeadm.j2"
+
+- name: Init kubernetes
+  shell: |
+    kubeadm init --config /tmp/kubeadm.yaml  --upload-certs
+  register: cluster_init_result
+
+- name: Check init result
+  fail:
+    msg: "failed to init kubernetes"
+  when: cluster_init_result is not succeeded
+
+- include: "join.yaml"

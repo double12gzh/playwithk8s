@@ -1,0 +1,10 @@
+---
+- name: Join node
+  shell: |
+    kubeadm join --token {{ token }} --discovery-token-unsafe-skip-ca-verification {{ ip_list[0] }}:6443
+  register: join_cluster
+
+- name: Check join result
+  fail:
+    msg: "failed to join node"
+  when: join_cluster is not successed
