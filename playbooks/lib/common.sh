@@ -13,13 +13,14 @@ LOG_FILE=""
 
 function init_log() {
 	path=$1
+	stage_name=$2
 
 	LOG=${path}/logs
 	if [[ ! -d ${LOG} ]]; then
 		mkdir -p ${LOG}
 	fi
 
-	LOG_FILE="${LOG}/execution.log"
+	LOG_FILE="${LOG}/${stage_name}.log"
 
 	mv ${LOG_FILE} ${LOG_FILE}.bk >/dev/null 2>&1 && echo true || echo false
 
@@ -32,15 +33,15 @@ function date_time() {
 
 function error() {
 	t=$(date_time)
-	echo "$red$t[ERROR] $@$end" >>${LOG}/execution.log
+	echo "$red$t[ERROR] $@$end" >>${LOG_FILE}
 }
 
 function info() {
 	t=$(date_time)
-	echo "$grn$t[INFO] $@$end" >>${LOG}/execution.log
+	echo "$grn$t[INFO] $@$end" >>${LOG_FILE}
 }
 
 function warn() {
 	t=$(date_time)
-	echo "$blu$t[WARN] $@$end" >>${LOG}/execution.log
+	echo "$blu$t[WARN] $@$end" >>${LOG_FILE}
 }

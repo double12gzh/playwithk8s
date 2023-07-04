@@ -13,7 +13,7 @@ CURRENT_DIR="$(
 export ANSIBLE_FORCE_COLOR=true
 source ${CURRENT_DIR}/lib/common.sh
 
-init_log ${CURRENT_DIR}
+init_log ${CURRENT_DIR} "prepare"
 
 playbook=${CURRENT_DIR}/ansible/prepare.yaml
 sed -i '/installer_base_dir/c\installer_base_dir: "'${CURRENT_DIR}'"' ${CURRENT_DIR}/ansible/group_vars/all.yaml

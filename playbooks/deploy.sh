@@ -13,7 +13,7 @@ CURRENT_DIR="$(
 export ANSIBLE_FORCE_COLOR=true
 source ${CURRENT_DIR}/lib/common.sh
 
-init_log ${CURRENT_DIR}
+init_log ${CURRENT_DIR} "deploy"
 
 playbook=${CURRENT_DIR}/ansible/deploy.yaml
 

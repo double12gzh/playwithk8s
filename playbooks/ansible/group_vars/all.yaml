@@ -1,8 +1,12 @@
 ---
 installer_base_dir: "tmp"
+
+# {{ 
+# 移动到 plannin.json
 pause_image: "myregistry.fuckyou.com/kubernetes/pause:3.8"
 image_registry: "myregistry.fuckyou.com/kubernetes"
 k8s_version: "v1.25.0"
 kubeadm_token: "abcdef.0123456789abcdef"
 kubeadm_pod_subnet: 193.244.0.0/16
 kubeadm_svc_subnet: 196.20.0.0/16
+}}

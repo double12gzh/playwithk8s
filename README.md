@@ -19,19 +19,19 @@
 
 ## 1.1 集群规划
 
-```json
+````json
 {
     "clusters": "172.17.0.3,172.17.0.4,172.17.0.5,172.17.0.6", # 集群节点，前三个为 master 节点, 其它的为 worker 节点
     "leading_server": "172.17.0.2", # 默认取第 1 个节点
     "password": "12345"
 }
-```
+``
 
 ## 1.2 环境配置
 
 ```bash
 bash playbooks/prepare.sh
-```
+````
 
 # 2. 部署 k8s
 
