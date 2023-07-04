@@ -15,3 +15,4 @@
   when: cluster_init_result is not succeeded
 
 - include: "join.yaml"
+  when: cluster_init_result is succeeded

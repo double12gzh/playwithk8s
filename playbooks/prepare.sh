@@ -20,7 +20,7 @@ sed -i '/installer_base_dir/c\installer_base_dir: "'${CURRENT_DIR}'"' ${CURRENT_
 
 info "[START] do preparation."
 
-ansible-playbook -f 10 -e "action=deploy" ${playbook} 2>&1 | tee -a ${LOG_FILE}
+ansible-playbook -f 10 -e "operation=deploy" ${playbook} 2>&1 | tee -a ${LOG_FILE}
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	error "failed to do prepare."
 	exit 1

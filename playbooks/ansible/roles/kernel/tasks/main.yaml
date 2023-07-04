@@ -52,6 +52,7 @@
     name: kubelet
     state: restarted
     daemon_reload: true
+    enabled: true
 
 - name: Generate containdrd config
   shell: containerd config default | tee /etc/containerd/config.toml
@@ -73,6 +74,7 @@
     name: containerd
     state: restarted
     daemon_reload: true
+    enabled: true
 
 #- name: Mount directory as shared
 #  shell: mount --make-shared "{{ item }}"
@@ -113,38 +115,38 @@
     - /etc/sysconfig/selinux
     - /etc/selinux/config
 
-- name: Get firewalld status
-  shell: service firewalld status && echo success || echo failed
+- name: Check firewalld is installed
+  stat: path=/usr/lib/systemd/system/firewalld.service
   register: firewalld_status
 
 - name: Stop firewalld
-  service:
+  systemd:
     name: firewalld
     state: stopped
     enabled: no
-  when: firewalld_status.stdout == "success"
+  when: firewalld_status.stat.exists
 
-- name: Get dnsmasq status
-  shell: service dnsmasq status && echo success || echo failed
+- name: Check dnsmasq is installed
+  stat: path=/usr/lib/systemd/system/dnsmasq.service
   register: dnsmasq_status
 
 - name: Stop dnsmasq
-  service:
+  systemd:
     name: dnsmasq
     state: stopped
     enabled: no
-  when: dnsmasq_status.stdout == "success"
+  when: dnsmasq_status.stat.exists
 
-- name: Get NetworkManager status
-  shell: service NetworkManager status && echo success || echo failed
-  register: networkmanasger_status
+- name: Check NetworkManager is installed
+  stat: path=/usr/lib/systemd/system/NetworkManager.service
+  register: networkmanager_status
 
 - name: Stop NetworkManager
-  service:
+  systemd:
     name: NetworkManager
     state: stopped
     enabled: no
-  when: networkmanasger_status.stdout == "success"
+  when: networkmanager_status.stat.exists
 
 - name: Verify if br_netfilter module exists
   shell: "modinfo br_netfilter"

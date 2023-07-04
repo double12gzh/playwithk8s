@@ -17,14 +17,12 @@ init_log ${CURRENT_DIR} "deploy"
 
 playbook=${CURRENT_DIR}/ansible/deploy.yaml
 
-info "[START] do preparation."
+info "[START] do deployment."
 
-ansible-playbook -f 10 -e "action=deploy" ${playbook} 2>&1 | tee -a ${LOG_FILE}
+ansible-playbook -f 10 -e "operation=deploy" ${playbook} 2>&1 | tee -a ${LOG_FILE}
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
-	error "failed to do prepare."
+	error "failed to do deployment."
 	exit 1
 fi
 
-cp ${CURRENT_DIR}/ansible/hosts /etc/ansible/hosts
-
-info "[FINISH]: prepare successfully."
+info "[FINISH]: successfully deployed."

@@ -14,7 +14,7 @@ localAPIEndpoint:
 nodeRegistration:
   criSocket: unix:///run/containerd/containerd.sock
   imagePullPolicy: IfNotPresent
-  name: master1
+  name: {{ leading_server_hostname }}
   taints: null
 ---
 apiServer:
