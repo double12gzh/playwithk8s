@@ -1,10 +1,10 @@
 ---
 - name: Get vars from planning
   include_vars:
-    file: "{{ installer_base_dir }}/planning.json"
+    file: "{{ installer_base_dir }}/planning.yaml"
     name: planning_vars
 
-- name: Set facts from planning.json
+- name: Set facts from planning.yaml
   set_fact:
     ip_list: "{{ planning_vars.clusters.split(',') }}"
     leading_server: "{{ planning_vars.leading_server }}"
