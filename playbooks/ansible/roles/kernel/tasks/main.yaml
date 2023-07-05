@@ -76,6 +76,13 @@
     daemon_reload: true
     enabled: true
 
+- name: Reload and restart docker
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: true
+    enabled: true
+
 #- name: Mount directory as shared
 #  shell: mount --make-shared "{{ item }}"
 #  with_items:
